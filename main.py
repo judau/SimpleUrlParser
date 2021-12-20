@@ -6,14 +6,14 @@ import json
 def proc_parse(input_value) -> dict:
     res = {}
     if "?" not in input_value:
-        return {input_value: "No Appendix"}
+        # really need `unquote` ? 🤔
+        return {input_value: {"No Query Params": {"unquote": urllib.parse.unquote(input_value)}}}
     (url, appendix) = input_value.split("?")
     apd = {}
     apd_list = appendix.split("&")
     for item in apd_list:
         (a_key, a_val) = item.split("=")
-        if re.search('%\\w\\w', a_val) is not None:
-            a_val = urllib.parse.unquote(a_val)
+        a_val = urllib.parse.unquote(a_val)
         if "?" in a_val:
             apd[a_key] = proc_parse(a_val)
         else:
